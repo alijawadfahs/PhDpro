@@ -23,7 +23,7 @@
 
 <p>However, the management part of current fog computing platforms remains centralized: a single node (or small group of nodes) is in charge of maintaining the list of available server machines, monitoring them, distributing software to them, deciding which server must take care of which task, etc. This organization generates unnecessary long-distance network traffic, does not handle network partitions well, and may even create legal issues if the controller and the compute/storage nodes are located in different jurisdictions.</p>
 
-<p>The goal of this project is to reduce the discrepancy between the broadly distributed compute/storage resources and the -- currently -- extremely centralized control of these resources. We can exploit the fact that the virtual resources in a fog computing platform are in most cases created in immediate proximity of the user(s) who will access them. In this perspective, the platform management processes could be distributed evenly across the infrastructure nodes so that the virtual and physical resources, the users accessing them, and the management processes organizing this system, will be co-located within a few hundred meters from each other. One interesting direction to address this problem -- which remains to be (in)validated by the doctoral student -- is to execute cloud resource scheduling algorithms [7] on every point-of-presence of the system (whereas traditional clouds centralize these algorithms in a single node), and to base the necessary coordination of multiple schedulers on gossiping algorithms [6] between neighboring points-of-presence. </p>
+<p>The goal of this project is to reduce the discrepancy between the broadly distributed compute/storage resources and the -- currently -- extremely centralized control of these resources. We can exploit the fact that the virtual resources in a fog computing platform are in most cases created in immediate proximity of the user(s) who will access them. In this perspective, the platform management processes could be distributed evenly across the infrastructure nodes so that the virtual and physical resources, the users accessing them, and the management processes organizing this system, will be co-located within a few hundred meters from each other. One interesting direction to address this problem -- which remains to be (in)validated by the doctoral student -- is to execute cloud resource scheduling algorithms [7] on every point-of-presence of the system (whereas traditional clouds centralize these algorithms in a single node), and to base the necessary coordination of multiple schedulers on gossiping algorithms [6] between neighbouring points-of-presence. </p>
 
 <p>This project is being conducted within the <a href="http://www.irisa.fr/en" class="external">IRISA</a> <a href="https://team.inria.fr/myriads/" class="external">Myriads</a> team which is working on the design of innovative infrastructures and middleware for future fog computing platforms [2,3,4].</p>	
 
@@ -104,15 +104,59 @@
 
 
 	
-<h2 >4- Results<a href="#4--Results" class="wiki-anchor"></a></h2>
+<h2 >4- RSA Design<a href="#4--Design" class="wiki-anchor"></a></h2>
+
+	<h3>4.1- Assumptions: </h3>
+	<ol>
+		<li>Non failing nodes.</li>
+		<li>Unreliable links.</li>
+		<li>Each node will have a special ID, and all nodes have to be able to distinguish each node according to this ID.</li>
+		<li>Each node have the knowledge of the initial available resources for the other node.</li>
+		<li>Geo-locations are available for every node, those locations are represented according to 2D Cartesian coordinates (<i>i.e.</i> we ignore the node elevation for the moment). </li>
+		<li>Implementing a Greedy RSA (<i>i.e.</i> assign the closest available resource). </li>
+		<li>Each node has its own meta-scheduler that relays on a local view of the network (no centralized entities).</li>
+		<li>End user is connected the geographically closest node </li>
+
+	</ol>
+	<h3>4.2- Local View Collection: </h3>
+	<p>According to the assumptions each node will have a local view of the available resources in its proximity. For an efficient scheduling this local view have to be up-to-date (in ideal cases), meanwhile an outdated list of available resources may lead to a conflict between two user jobs fighting for the same resource. In this section we will explain how we are going to collect those information, and how we are going to keep them as up-to-date as possible. </p>
+
+	<p>The mechanism of having this local view is done as follows: </p>
+		<ol>
+			<li>Each node will choose a neighbourhood that will contain a list of nodes in its proximity, using the Geo-locations. Each node should be responsible to update its neighbours each time a resource change occurs.</li>
+			<li>The update process is based on:  </li>
+				<ol type="a">
+					<li> A <i> RESERVE_CALL</i>, which is a local broadcast transmitted to the neighbours in item 1. This call will inform the receivers neighbours that a new resource is reserved in the sender node  </li>
+					<li> A <i> RELEASE_CALL</i>, which is a local broadcast transmitted to the neighbours in item 1.  This call will inform the receivers neighbours that a new resource is released in the sender node. </li>
+					<li> A gossip pull, each period T (to be determined according to the variability of the resource allocations), n nodes will transmit a pull call to their neighbours to update the current resources list. This approach is necessary to adapt with the bad link quality we considered in the assumptions.</li>
+				</ol>
+			<li>The list of the available resources will be indexed by the nodes ID, and will contain the available resources in addition to the last update reception time (will be used later for a failure detector mechanism), and the Geo-location of each node. </li>
+			<li>The list of the available resources will be sorted according to the distance from the list owner (from closest to farthest). </li>
+		</ol>
+	<h3>The Resource Scheduling Process</h3>
+		<p> At this point we have to start scheduling new resources for arriving jobs from the end user, we have to consider that the list that each node collected is up-to-date. This consideration is driven from the fact that we want to avoid a looking on the resource before the execution of the job and the update of the other nodes. Basically our mechanism is considered an Optimistic/Reactive one in the sense that we will the consider the resource is still available till the moment of the arriving job, and we will deal with any conflict induced by this optimism. At the same time our mechanism is considered an Pessimistic/Proactive one in the sense that we will check if this resource is available before scheduling the resource.</p>
+
+		<p>To choose on of the resources that have been noted to be available in the resource link we have to do the following steps:</p>
+			<ol>
+				<li>If the resource requested in the user job is available in the first node, there is no need to call the meta-scheduler, the job will be automatically assigned to the first node. (<i>i.e.</i> by the first node we refer to the node that is communicating to the end user). </li>
+				<li>Otherwise the meta-scheduler will lookup in the list of the available resources, the scheduler will start the list one by one from the top(from closest to farthest), and whenever a match is find it will be automatically choose without any further investigations. Mainly the scheduler is implemented this way to achieve a greedy scheduling, however the scheduling should face some major updates in the following stages of the PhD to adapt with other variables of the network like: load balancing, and execution time.</li>
+				<li> In case no resource with the user demand was available, the scheduler will reply to the user but a <i>NOT_FOUND_MESSSAGE</i> and will request a change in the demanded resources.</li>
+				<li>When a resource is scheduled, the node will send a <i>RESERVE_CALL</i> as explained in the update process. The lost broadcast messages are not acknowledged and the nodes have to deal with this inconsistency. same for <i>RELEASE_CALL</i> when a job is finished and the resource is back available. Here we have to note that the inconsistency imposed by the link quality is delt with using the periodic gossip pull.</li>
+			
+			</ol>
+
+	<h3>Drawback</h3>
+		<p>We are expecting the following: </p>
+<hr />
+
+<h2 >5- Results<a href="#5--Results" class="wiki-anchor"></a></h2>
 
 
 	<p align="center"><i><u>To Be Updated</u></i></p>
 <hr />
 
-
 	
-<h2 >5-References<a href="#5-References" class="wiki-anchor"></a></h2>
+<h2 >6-References<a href="#6-References" class="wiki-anchor"></a></h2>
 
 
 <ul>
