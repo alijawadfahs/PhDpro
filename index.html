@@ -133,7 +133,7 @@
 			<li>The list of the available resources will be indexed by the nodes ID, and will contain the available resources in addition to the last update reception time (will be used later for a failure detector mechanism), and the Geo-location of each node. </li>
 			<li>The list of the available resources will be sorted according to the distance from the list owner (from closest to farthest). </li>
 		</ol>
-	<h3>The Resource Scheduling Process</h3>
+	<h3>4.3- The Resource Scheduling Process</h3>
 		<p> At this point we have to start scheduling new resources for arriving jobs from the end user, we have to consider that the list that each node collected is up-to-date. This consideration is driven from the fact that we want to avoid a looking on the resource before the execution of the job and the update of the other nodes. Basically our mechanism is considered an Optimistic/Reactive one in the sense that we will the consider the resource is still available till the moment of the arriving job, and we will deal with any conflict induced by this optimism. At the same time our mechanism is considered an Pessimistic/Proactive one in the sense that we will check if this resource is available before scheduling the resource.</p>
 
 		<p>To choose on of the resources that have been noted to be available in the resource link we have to do the following steps:</p>
@@ -145,7 +145,7 @@
 			
 			</ol>
 
-	<h3>Drawback</h3>
+	<h3>4.4- Drawback</h3>
 		<p>We are expecting the following: </p>
 		<ul>
 			<li>The failure with a high load, a lot of conflicts will occur.</li>
@@ -161,7 +161,7 @@
 	<p align="center"><i><u>To Be Updated</u></i></p>
 <hr />
 
-	
+	z
 <h2 >6-References<a href="#6-References" class="wiki-anchor"></a></h2>
 
 
