@@ -1,0 +1,119 @@
+1- download hypriot from https://github.com/hypriot/image-builder-rpi/releases/download/v1.7.1/hypriotos-rpi-v1.7.1.img.zip
+
+
+2- insert the sd card and run the following command: 
+flash --hostname Node$$ https://github.com/hypriot/image-builder-rpi/releases/download/v1.7.1/hypriotos-rpi-v1.7.1.img.zip (or from the download location) 
+
+ a- it will ask you to specify the location of the SD card mmcblk0 in this case. 
+
+ b- then type yes to confirm and wait until finished. 
+
+3- remove the card from the pc and insert it in the rpi and run it. 
+
+4- pirate/hypriot are the default credientels. 
+
+5- change the Ip address using ifconfig so we can ssh to the node. 
+
+sudo ifconfig eth0 YOUR_IP netmask 255.255.255.0 up 
+
+6- ssh to the node using: 
+
+ssh pirate@YOUR_IP 4
+
+7- setup a static ip so it won't change each time the rpi reboot. go to /etc/network/ 
+
+sudo nano /etc/network/interfaces 
+
+and add the following :
+
+auto eth0
+iface eth0 inet static
+    address YOUR_IP
+    netmask 255.255.255.0
+    network Your_Network_IP 
+    broadcast Your_broadcast_Ip 
+
+and then reboot ( sudo reboot ). 
+
+8- change pirate username ( I don't like it) 
+
+adduser username
+
+usermod -aG sudo username
+
+then reboot 
+
+Now ssh from the new created user using: 
+
+ssh New_user@YOUR_IP 
+
+then : deluser --remove-home pirate 
+
+cut -d: -f1 /etc/passwd to check thet pirate is removed. 
+
+9- enabling wifi on the rpi. 
+
+  start with enabling the wlan0 
+
+  sudo ifconfig wlan0 up.
+
+  go to /etc/network and open the interfaces. 
+
+  sudo nano /etc/network/interfaces
+ 
+  and add 
+
+	allow-hotplug wlan0
+	auto wlan0
+ 
+ 
+	iface wlan0 inet dhcp
+        	wpa-ssid "ssid"
+        	wpa-psk "password"
+then reboot. 
+
+
+in case the ping wasn't working 
+sudo chmod u+s `which ping`
+
+10- install kubeadm 
+
+apt-get update && apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+apt-get update
+apt-get install -y kubelet kubeadm kubectl
+
+setting up the wifi hotspot: 
+
+sudo su 
+
+wget -P /home/pirate https://raw.githubusercontent.com/jancelin/rpi_wifi_direct/master/raspberry_pi3/install_wifi_direct_rpi3.sh; chmod +x /home/pirate/install_wifi_direct_rpi3.sh; bash -x /home/pirate/install_wifi_direct_rpi3.sh 
+
+
+access the /etc/hostapd/hostapd.conf and change the ssid and passworrd. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+ 
+
+
