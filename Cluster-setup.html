@@ -1,4 +1,6 @@
 <html lang="en">
+
+
 <head>
 
 <title>FOG DRSA - CLUSTER MANNUAL </title>
@@ -12,66 +14,66 @@
 
 <ul>
 	<li> <h3 style="display:inline;">STEP 1:</h3><p style="display:inline;"> initiate the master node and the cluster</p> 
-		<BLOCKQUOTE><code>kubeadm init --pod-network-cidr 10.244.0.0/16</code></BLOCKQUOTE>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubeadm init --pod-network-cidr 10.244.0.0/16</code></BLOCKQUOTE>
 		(it usually takes up to 10 mins). <br>
 
 	</li><br>
 	<li> <h3 style="display:inline;">STEP 2:</h3><p style="display:inline;"> copy and paste the kubeadm call for the worker nodes. </p> 
-		<BLOCKQUOTE><code> kubeadm join ....</code></BLOCKQUOTE>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'> kubeadm join ....</code></BLOCKQUOTE>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 3:</h3><p style="display:inline;"> run kubectl as a regular user</p> 
-		<BLOCKQUOTE><code>sudo cp /etc/kubernetes/admin.conf $HOME/<br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>sudo cp /etc/kubernetes/admin.conf $HOME/<br>
 						  sudo chown $(id -u):$(id -g) $HOME/admin.conf<br>
 						  export KUBECONFIG=$HOME/admin.conf<br>
 		</code></BLOCKQUOTE>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 4:</h3><p style="display:inline;"> check if all nodes are connected </p> 
-		<BLOCKQUOTE><code>kubectl get nodes</code></BLOCKQUOTE> (before configuring the CNI the nodes won't be ready) <br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl get nodes</code></BLOCKQUOTE> (before configuring the CNI the nodes won't be ready) <br>
 
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 5:</h3><p style="display:inline;"> configure the CNI and check if all nodes status are ready </p> 
-		<BLOCKQUOTE><code>curl -sSL https://rawgit.com/coreos/flannel/v0.7.1/Documentation/kube-flannel-rbac.yml | kubectl create -f -<br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>curl -sSL https://rawgit.com/coreos/flannel/v0.7.1/Documentation/kube-flannel-rbac.yml | kubectl create -f -<br>
 						  curl -sSL https://rawgit.com/coreos/flannel/v0.7.1/Documentation/kube-flannel.yml | sed "s/amd64/arm/g" | kubectl create -f -
 		</code></BLOCKQUOTE>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 6:</h3><p style="display:inline;"> check that all the pods are running. </p> 
-		<BLOCKQUOTE><code>kubectl get po --all-namespaces</code></BLOCKQUOTE> the kube-dns will need the Iptables debug to turn into running state). <br>	
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl get po --all-namespaces</code></BLOCKQUOTE> the kube-dns will need the Iptables debug to turn into running state). <br>	
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 7:</h3><p style="display:inline;"> run a deployment (we consider one of the examples)  </p> 
-		<BLOCKQUOTE><code> kubectl run hypriot --image=hypriot/rpi-busybox-httpd --replicas=3 --port=80</code></BLOCKQUOTE> check the pods of the deployment if they reach the running state.<br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'> kubectl run hypriot --image=hypriot/rpi-busybox-httpd --replicas=3 --port=80</code></BLOCKQUOTE> check the pods of the deployment if they reach the running state.<br>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 8:</h3><p style="display:inline;"> expose the port to access it from the cluster</p> 
-		<BLOCKQUOTE><code>kubectl expose deployment hypriot --port 80</code></BLOCKQUOTE>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl expose deployment hypriot --port 80</code></BLOCKQUOTE>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 9:</h3><p style="display:inline;"> first debug is to fix the iptables </p> 
-		<BLOCKQUOTE><code>sudo iptables -A FORWARD -i cni0 -j ACCEPT <br> sudo iptables -A FORWARD -o cni0 -j ACCEPT</code></BLOCKQUOTE> run in all nodes.<br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>sudo iptables -A FORWARD -i cni0 -j ACCEPT <br> sudo iptables -A FORWARD -o cni0 -j ACCEPT</code></BLOCKQUOTE> run in all nodes.<br>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 10:</h3><p style="display:inline;">  get the endpoints and curl them . </p> 
-		<BLOCKQUOTE><code>kubectl get endpoints hypriot</code></BLOCKQUOTE> the number of endpoints shall be equal to the number of the replicas otherwise you have to check if all pods are running. <br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl get endpoints hypriot</code></BLOCKQUOTE> the number of endpoints shall be equal to the number of the replicas otherwise you have to check if all pods are running. <br>
  
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 11:</h3><p style="display:inline;"> apply the RBAC and Ingress controller</p> 
-		<BLOCKQUOTE><code>kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-rbac.yaml <br>kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-ds.yaml </code></BLOCKQUOTE>check if a new pod for the ingress controller have been create.<br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-rbac.yaml <br>kubectl apply -f https://raw.githubusercontent.com/containous/traefik/master/examples/k8s/traefik-ds.yaml </code></BLOCKQUOTE>check if a new pod for the ingress controller have been create.<br>
 	</li><br>
 	
 
 	<li> <h3 style="display:inline;">STEP 12:</h3><p style="display:inline;"> select a node to handle the ingress</p> 
-		<BLOCKQUOTE><code>kubectl label node <i>loadbalancer-node</i> nginx-controller=traefik
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl label node <i>loadbalancer-node</i> nginx-controller=traefik
 </code></BLOCKQUOTE>
 	</li><br>
 
 		<li> <h3 style="display:inline;">STEP 13:</h3><p style="display:inline;">  create the ingress file and apply </p>
 			create a file hypriot-ingress.yaml and include in this file: <br>
-		<BLOCKQUOTE><code>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>
 			
 			apiVersion: extensions/v1beta1<br>
 			kind: Ingress<br>
@@ -87,16 +89,16 @@
 			          servicePort: 80<br>
 		</code></BLOCKQUOTE>
 
-		<BLOCKQUOTE><code>kubectl apply -f hypriot-ingress.yaml</code></BLOCKQUOTE> This will enable users from outside the cluster to access the pods.<br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl apply -f hypriot-ingress.yaml</code></BLOCKQUOTE> This will enable users from outside the cluster to access the pods.<br>
 
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 14:</h3><p style="display:inline;"> check if the ingress is up</p> 
-		<BLOCKQUOTE><code>kubectl get ing </code></BLOCKQUOTE> the ADDRESS feature is not configured yet. <br>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>kubectl get ing </code></BLOCKQUOTE> the ADDRESS feature is not configured yet. <br>
 	</li><br>
 
 	<li> <h3 style="display:inline;">STEP 15:</h3><p style="display:inline;"> curl from a user outside the cluster, use the IP address of the node that contain the ingress. also you can use browsers normally. </p> 
-		<BLOCKQUOTE><code></code></BLOCKQUOTE>
+		<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'></code></BLOCKQUOTE>
 	</li><br>
 	
 

@@ -15,7 +15,7 @@
 
 		<br>
 		<li> <h3>STEP 2:</h3>Insert the sd card and run the following command: <br> 
-			<BLOCKQUOTE><code>flash --hostname Node$$ https://github.com/hypriot/image-builder-rpi/releases/download/v1.7.1/hypriotos-rpi-v1.7.1.img.zip</code></BLOCKQUOTE> <br><br>   <i>  (or from the download location) </i>
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>flash --hostname Node$$ https://github.com/hypriot/image-builder-rpi/releases/download/v1.7.1/hypriotos-rpi-v1.7.1.img.zip</code></BLOCKQUOTE> <br><br>   <i>  (or from the download location) </i>
 			<br><br>
 
 			<ol type="a">
@@ -30,14 +30,14 @@
 
 		<li> <h3>STEP 4</h3> Use pirate/hypriot are the default credentials to log into the RPi.</li>
 
-		<li> <h3>STEP 5:</h3>change the Ip address using ifconfig so we can ssh to the node. using the following command:<br> <BLOCKQUOTE><code>sudo ifconfig eth0 <i>YOUR_IP</i> netmask 255.255.255.0 up </code></BLOCKQUOTE></li>
+		<li> <h3>STEP 5:</h3>change the Ip address using ifconfig so we can ssh to the node. using the following command:<br> <BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>sudo ifconfig eth0 <i>YOUR_IP</i> netmask 255.255.255.0 up </code></BLOCKQUOTE></li>
 
-		<li> <h3>STEP 6:</h3>ssh to the node using:<br> <BLOCKQUOTE><code>ssh pirate@<i>YOUR_IP</i> </code> </li></BLOCKQUOTE>
+		<li> <h3>STEP 6:</h3>ssh to the node using:<br> <BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>ssh pirate@<i>YOUR_IP</i> </code> </li></BLOCKQUOTE>
 
 		<li> <h3>STEP 7:</h3>setup a static ip so it won't change each time the rpi reboot. go to /etc/network/ <br>
-			<BLOCKQUOTE><code>sudo nano /etc/network/interfaces</code> <br><br></BLOCKQUOTE>
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>sudo nano /etc/network/interfaces</code> <br><br></BLOCKQUOTE>
 			and add the following : <br>
-			<BLOCKQUOTE><code>auto eth0
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>auto eth0
 	<BLOCKQUOTE>iface eth0 inet static</BLOCKQUOTE>
     <BLOCKQUOTE>address <i>YOUR_IP</i></BLOCKQUOTE>
     <BLOCKQUOTE>netmask 255.255.255.0</BLOCKQUOTE>
@@ -50,28 +50,28 @@
 
 		<li> <h3>STEP 8:</h3>change pirate username ( I don't like it) <br>
 
-			<BLOCKQUOTE><code>adduser <i>username</i> <br> usermod -aG sudo <i>username</i></code></BLOCKQUOTE><br>
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>adduser <i>username</i> <br> usermod -aG sudo <i>username</i></code></BLOCKQUOTE><br>
 			then reboot and Now ssh from the new created user using: <br>
-			<BLOCKQUOTE><code>ssh <i>New_user</i>@<i>YOUR_IP</i> </code></BLOCKQUOTE><br>
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>ssh <i>New_user</i>@<i>YOUR_IP</i> </code></BLOCKQUOTE><br>
 			finally : <br>
-			<BLOCKQUOTE><code> deluser --remove-home pirate </code></BLOCKQUOTE>
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'> deluser --remove-home pirate </code></BLOCKQUOTE>
 		</li>
 
 		<li> <h3>STEP 9:</h3> install kubeadm: <br><br>
 
 			<ul> 
-				<li><code>apt-get update && apt-get install -y apt-transport-https</code></li>
-				<li><code>curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -</code></li>
-				<li><code>cat <<EOF >/etc/apt/sources.list.d/kubernetes.list</code></li>
-				<li><code>deb http://apt.kubernetes.io/ kubernetes-xenial main</code></li>
-				<li><code>EOF</code></li>
-				<li><code>apt-get update</code></li>
-				<li><code>apt-get install -y kubelet kubeadm kubectl</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>apt-get update && apt-get install -y apt-transport-https</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>cat <<EOF >/etc/apt/sources.list.d/kubernetes.list</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>deb http://apt.kubernetes.io/ kubernetes-xenial main</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>EOF</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>apt-get update</code></li>
+				<li><code style='background-color: rgb(220,220,220);'>apt-get install -y kubelet kubeadm kubectl</code></li>
 			</ul>	
 		</li>
 
 		<li><h3>STEP 10:</h3>setting up the wifi hotspot:<br>
-			<BLOCKQUOTE><code>wget -P /home/pirate https://raw.githubusercontent.com/jancelin/rpi_wifi_direct/master/raspberry_pi3/install_wifi_direct_rpi3.sh; chmod +x /home/pirate/install_wifi_direct_rpi3.sh; bash -x /home/pirate/install_wifi_direct_rpi3.sh</code></BLOCKQUOTE>
+			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>wget -P /home/pirate https://raw.githubusercontent.com/jancelin/rpi_wifi_direct/master/raspberry_pi3/install_wifi_direct_rpi3.sh; chmod +x /home/pirate/install_wifi_direct_rpi3.sh; bash -x /home/pirate/install_wifi_direct_rpi3.sh</code></BLOCKQUOTE>
 
 			access the /etc/hostapd/hostapd.conf and change the ssid and passworrd, then reboot. 
 
