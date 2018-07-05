@@ -41,6 +41,7 @@
 	<BLOCKQUOTE>iface eth0 inet static</BLOCKQUOTE>
     <BLOCKQUOTE>address <i>YOUR_IP</i></BLOCKQUOTE>
     <BLOCKQUOTE>netmask 255.255.255.0</BLOCKQUOTE>
+    <BLOCKQUOTE>gateway <i>Your_GATEWAY</i> </BLOCKQUOTE>
     <BLOCKQUOTE>network <i>Your_Network_IP</i> </BLOCKQUOTE>
     <BLOCKQUOTE>broadcast <i>Your_broadcast_Ip</i> </BLOCKQUOTE></code></BLOCKQUOTE><br>
 
@@ -57,7 +58,31 @@
 			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'> deluser --remove-home pirate </code></BLOCKQUOTE>
 		</li>
 
-		<li> <h3>STEP 9:</h3> install kubeadm: <br><br>
+		<li> <h3>STEP 9:</h3> set the DNS server: <br><br>
+			First temporarly add your dns to /etc/resolv.conf and then install install resolvconf: <br><br>
+			<code style='background-color: rgb(220,220,220);'>sudo nano /etc/resolv.conf </code><br><br>
+
+			<code style='background-color: rgb(220,220,220);'>sudo apt-get install resolvconf </code><br><br>
+			
+			Then add this line at the end of the file /etc/resolvconf/resolv.conf.d <br><br>
+			<code style='background-color: rgb(220,220,220);'>nameserver YOUR_DNS_SERVER</code><br>
+				
+		</li>
+
+		<li> <h3>STEP 10:</h3> set the ntp server: <br><br>
+			Open /etc/ntp.conf <br>
+			<code style='background-color: rgb(220,220,220);'>sudo nano /etc/ntp.conf </code><br><br>
+
+			
+			Then add this line at the end of the file /etc/resolvconf/resolv.conf.d <br><br>
+			<code style='background-color: rgb(220,220,220);'>server 131.254.254.60 iburst <br>
+		server 131.254.254.7 iburst</code><br>
+				
+		</li>
+
+	
+
+		<li> <h3>STEP 11:</h3> install kubeadm: <br><br>
 
 			<ul> 
 				<li><code style='background-color: rgb(220,220,220);'>apt-get update && apt-get install -y apt-transport-https</code></li>
@@ -70,7 +95,7 @@
 			</ul>	
 		</li>
 
-		<li><h3>STEP 10:</h3>setting up the wifi hotspot:<br>
+		<li><h3>STEP 12:</h3>setting up the wifi hotspot:<br>
 			<BLOCKQUOTE><code style='background-color: rgb(220,220,220);'>wget -P /home/pirate https://raw.githubusercontent.com/jancelin/rpi_wifi_direct/master/raspberry_pi3/install_wifi_direct_rpi3.sh; chmod +x /home/pirate/install_wifi_direct_rpi3.sh; bash -x /home/pirate/install_wifi_direct_rpi3.sh</code></BLOCKQUOTE>
 
 			access the /etc/hostapd/hostapd.conf and change the ssid and passworrd, then reboot. 
@@ -84,6 +109,6 @@
 
 
 	
-<p align="right">Uploaded in 10/01/2018</p>
+<p align="right">Uploaded in 05/07/2018</p>
 </body>
 </html>
