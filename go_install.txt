@@ -1,0 +1,7 @@
+1- download the tar file from https://golang.org/dl/ 
+2- tar -C /root/ -xzf go.ARCH.VERSION 
+3- set GOROOT GOPATH PATH : 
+	export GOROOT=$HOME/go
+	export PATH=$PATH:$GOROOT/bin
+	export GOPATH=$HOME/go/src
+4- install gcc : install apt-get gcc 

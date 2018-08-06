@@ -64,7 +64,7 @@
 
 			<code style='background-color: rgb(220,220,220);'>sudo apt-get install resolvconf </code><br><br>
 			
-			Then add this line at the end of the file /etc/resolvconf/resolv.conf.d <br><br>
+			Then add this line at the end of the file /etc/resolvconf/resolv.conf.d/base <br><br>
 			<code style='background-color: rgb(220,220,220);'>nameserver YOUR_DNS_SERVER</code><br>
 				
 		</li>
@@ -74,7 +74,7 @@
 			<code style='background-color: rgb(220,220,220);'>sudo nano /etc/ntp.conf </code><br><br>
 
 			
-			Then add this line at the end of the file /etc/resolvconf/resolv.conf.d <br><br>
+			Then add this line at the end of the file /etc/ntp.conf  <br><br>
 			<code style='background-color: rgb(220,220,220);'>server 131.254.254.60 iburst <br>
 		server 131.254.254.7 iburst</code><br>
 				
@@ -87,9 +87,7 @@
 			<ul> 
 				<li><code style='background-color: rgb(220,220,220);'>apt-get update && apt-get install -y apt-transport-https</code></li>
 				<li><code style='background-color: rgb(220,220,220);'>curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -</code></li>
-				<li><code style='background-color: rgb(220,220,220);'>cat <<EOF >/etc/apt/sources.list.d/kubernetes.list</code></li>
-				<li><code style='background-color: rgb(220,220,220);'>deb http://apt.kubernetes.io/ kubernetes-xenial main</code></li>
-				<li><code style='background-color: rgb(220,220,220);'>EOF</code></li>
+				<li><code style='background-color: rgb(220,220,220);'> echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list</code></li>
 				<li><code style='background-color: rgb(220,220,220);'>apt-get update</code></li>
 				<li><code style='background-color: rgb(220,220,220);'>apt-get install -y kubelet kubeadm kubectl</code></li>
 			</ul>	
