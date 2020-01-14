@@ -1,0 +1,44 @@
+Setting up a new node: 
+
+
+Step 1: fix the command line: 
+
+add this line to .bashrc of the root
+PS1="\n\[\033[0;37m\]\342\224\214\342\224\200\$(if [[ \$? == 0 ]]; then echo \"[\[\033[0;32m\]\[\033[01;32m\]\342\234\223\[\033[0;37m\]]\342\224\200\"; else echo \"[\[\033[0;32m\]\[\033[01;31m\]\342\234\227\[\033[0;37m\]]\342\224\200\"; fi)[$(if [[ ${EUID} == 0 ]]; then echo '\[\033[0;31m\]\h'; else echo '\[\033[0;33m\]\u\[\033[0;37m\]@\[\033[0;96m\]\h'; fi)\[\033[0;37m\]]\342\224\200[\[\033[0;32m\]\w\[\033[0;37m\]]\n\[\033[0;37m\]\342\224\224\342\224\200\342\224\200\342\225\274 \[\033[0m\]"
+
+
+Step 2: Add the SSH Key: 
+
+- copy your SSH key to the host authorized keys (~/.ssh/authorized_keys). In both your home and root users. (make shure the owner of the authorized keys is the user where the file is hosted).  
+
+Step 3: Disable password login and enable Root login: 
+
+-In the file /etc/ssh/sshd_config set the following: 
+	-PermitRootLogin to yes
+	-PasswordAuthentication to no
+ save and quit. 
+
+- Reboot the machone. 
+
+
+Step 4: Install Serf binaries. 
+
+- copy the bin file from one of the nodes other than the master(the version at the master node is modified).
+- install screen:  apt install screen
+Step 5: enable serf handlers.
+
+-Create a serf cluster and add create the serf_agent.sh file in the the new node: 
+	- make sure that the command to get the flannel ip address works properly. 
+	- unzip ./sh.zip
+	- in the serf_agent.sh file edit the bind ip address of the hosting node. 
+	- make sure that the directory of the handler sh is right.
+	- handler.sh fix the rx packet command. 
+	- svc-handler.sh to be inspected later. 
+	
+
+Step 6: install Proxy-mity. 
+
+- clone Proxy-mity code: git clone https://github.com/alijawadfahs/FOG-aware.git 
+
+
+Step 7: All is set we can proceed to cluster setup. 

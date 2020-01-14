@@ -1,0 +1,56 @@
+
+
+Step 1: Setting up the Screens: 
+
+- create two screen to host Proxy-mity and serf: 
+	- screen -SU Serf
+	- screen -SU Proxy
+- connect to the screen using the call screen -rU and the name of the screen. 
+
+Step 2: Setting up a serf cluster using the .sh file: 
+
+- connect to Serf screen using screen -rU Serf in all the nodes. 
+- run the serf agent file at the master node inside the screen in the master node.
+- then run the serf agent sh file in all the other nodes. they will join the master node. 
+- serf members to check all the nodes are connected and they are displaying their Ip address of flannel. 
+
+Step 3: Checking the serf Handlers: 
+
+- check if all the nodes are replying correctly to handler service:
+	- implement a test deployment in all the nodes (to initiate the cni interface). 
+	- run the handler servicer from the hosting node (./handler.sh)
+	- the outcome should show the number of requests of packets.
+	- run a serf query and make sure all the nodes reply correctly.   
+
+Step 4: Running Proxy-mity:
+- start by creating and exposing a deployment. 
+- excute in all the nodes:
+	sudo iptables -A FORWARD -i cni0 -j ACCEPT
+	sudo iptables -A FORWARD -o cni0 -j ACCEPT
+- make sure that the service ip is working on all the nodes. 
+- inside the Proxy screen (screen -rU Proxy):
+	cd FOG-aware
+	./main.py --LoadBalancing 'e(-x)' --alpha 1 --cycle 60
+
+Step 5: Test the SVC handler: 
+- make sure it's installed and running in all the nodes. 
+
+Step 6: change the delay using TC and the programmed automation. 
+
+- in the delay folder check the delay.csv mapping and then run ./create.py
+- this will create the sh file for the tc commands to be ran in each node. 
+- chmod of the file in the newely configured nodes to exe. 
+- ./run.sh and everything will be excuted automatically. 
+
+
+Step 7: run Hona and make sure everything is running. 
+
+- create and expose a deployment. 
+- make sure that the svc query is responding on all the nodes. 
+- Start sending the load on the test deployment by changing the svc ip in the test sh file and running it
+- make sure that the check function running is upgrading the new transmitted packets. 
+- using the schd Run function to deploy a new deployment
+- see the detection of the deployment on the check code. 
+- change the svc IP and send a new load to these nodes 
+
+Step 8: run the load injection software. 
